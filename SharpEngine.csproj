@@ -9,4 +9,16 @@
     <PackageReference Include="glfw-net" Version="3.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="glfw.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="libglfw.a">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="libglfw.dylib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
