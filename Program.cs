@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using GLFW;
 using static OpenGL.Gl;
 
@@ -41,34 +42,14 @@ namespace SharpEngine
             }
             glEnableVertexAttribArray(0);
 
-            string vertexShaderSource = @"
-#version 330 core
-in vec3 pos;
-
-void main()
-{
-    gl_Position = vec4(pos.x, pos.y, pos.z, 1.0);
-}
-";
-
-            string fragmentShaderSource = @"
-#version 330 core
-out vec4 result;
-
-void main()
-{
-    result = vec4(1, 0, 0, 1);
-}
-";
-
             // create vertex shader
             var vertexShader = glCreateShader(GL_VERTEX_SHADER);
-            glShaderSource(vertexShader, vertexShaderSource);
+            glShaderSource(vertexShader, File.ReadAllText("shaders/red-triangle.vert"));
             glCompileShader(vertexShader);
             
             // create fragment shader
             var fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-            glShaderSource(fragmentShader, fragmentShaderSource);
+            glShaderSource(fragmentShader, File.ReadAllText("shaders/red-triangle.frag"));
             glCompileShader(fragmentShader);
             
             // create shader program - rendering pipeline
