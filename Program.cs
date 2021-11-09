@@ -26,6 +26,8 @@ namespace SharpEngine
             // engine rendering loop
             while (!Glfw.WindowShouldClose(window)) {
                 Glfw.PollEvents(); // react to window changes (position etc.)
+                glClearColor(.2f, .05f, .2f, 1);
+                glClear(GL_COLOR_BUFFER_BIT);
                 glDrawArrays(GL_TRIANGLES, 0, 3);
                 glFlush();
                 vertices[4] += 0.001f;
