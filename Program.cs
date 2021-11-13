@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Runtime.InteropServices;
 using GLFW;
 using static OpenGL.Gl;
 
@@ -27,18 +26,17 @@ namespace SharpEngine
         
         static void Main(string[] args) {
             
-            var window = CreateWindow();
+            var window = new Window();
 
             CreateShaderProgram();
 
             // engine rendering loop
             var direction = new Vector(0.0003f, 0.0003f);
             var multiplier = 0.999f;
-            while (!Glfw.WindowShouldClose(window)) {
-                Glfw.PollEvents(); // react to window changes (position etc.)
-                ClearScreen();
-                Render(window);
+            while (window.IsOpen()) {
+                window.BeginRender();
 
+                // Update Triangles
                 for (var i = 0; i < triangles.Length; i++) {
                     var triangle = triangles[i];
                     triangle.Scale(multiplier);
@@ -65,21 +63,17 @@ namespace SharpEngine
                     }
                 }
 
+                RenderTriangles();
+                
+                window.EndRender();
             }
         }
 
-        static void Render(Window window) {
+        static void RenderTriangles() {
             for (var i = 0; i < triangles.Length; i++) {
                 var triangle = triangles[i];
                 triangle.Render();
             }
-
-            Glfw.SwapBuffers(window);
-        }
-
-        static void ClearScreen() {
-            glClearColor(.2f, .05f, .2f, 1);
-            glClear(GL_COLOR_BUFFER_BIT);
         }
 
         static void CreateShaderProgram() {
@@ -99,24 +93,6 @@ namespace SharpEngine
             glAttachShader(program, fragmentShader);
             glLinkProgram(program);
             glUseProgram(program);
-        }
-
-        static Window CreateWindow() {
-            // initialize and configure
-            Glfw.Init();
-            Glfw.WindowHint(Hint.ClientApi, ClientApi.OpenGL);
-            Glfw.WindowHint(Hint.ContextVersionMajor, 3);
-            Glfw.WindowHint(Hint.ContextVersionMinor, 3);
-            Glfw.WindowHint(Hint.Decorated, true);
-            Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
-            Glfw.WindowHint(Hint.OpenglForwardCompatible, Constants.True);
-            Glfw.WindowHint(Hint.Doublebuffer, Constants.True);
-
-            // create and launch a window
-            var window = Glfw.CreateWindow(1024, 768, "SharpEngine", Monitor.None, Window.None);
-            Glfw.MakeContextCurrent(window);
-            Import(Glfw.GetProcAddress);
-            return window;
         }
     }
 }
