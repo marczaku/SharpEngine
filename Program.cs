@@ -1,12 +1,7 @@
-﻿using System.IO;
-using GLFW;
-using static OpenGL.Gl;
-
-namespace SharpEngine
+﻿namespace SharpEngine
 {
     class Program
     {
-        
         static Triangle[] triangles = new Triangle[] {
             new Triangle (
                 new Vertex[] {
@@ -27,8 +22,8 @@ namespace SharpEngine
         static void Main(string[] args) {
             
             var window = new Window();
-
-            CreateShaderProgram();
+            var material = new Material("shaders/position-color.vert", "shaders/vertex-color.frag");
+            material.Use();
 
             // engine rendering loop
             var direction = new Vector(0.0003f, 0.0003f);
@@ -74,25 +69,6 @@ namespace SharpEngine
                 var triangle = triangles[i];
                 triangle.Render();
             }
-        }
-
-        static void CreateShaderProgram() {
-            // create vertex shader
-            var vertexShader = glCreateShader(GL_VERTEX_SHADER);
-            glShaderSource(vertexShader, File.ReadAllText("shaders/position-color.vert"));
-            glCompileShader(vertexShader);
-
-            // create fragment shader
-            var fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-            glShaderSource(fragmentShader, File.ReadAllText("shaders/vertex-color.frag"));
-            glCompileShader(fragmentShader);
-
-            // create shader program - rendering pipeline
-            var program = glCreateProgram();
-            glAttachShader(program, vertexShader);
-            glAttachShader(program, fragmentShader);
-            glLinkProgram(program);
-            glUseProgram(program);
         }
     }
 }
