@@ -4,8 +4,13 @@ using static OpenGL.Gl;
 namespace SharpEngine {
 	public class Window {
 		readonly GLFW.Window window;
+		Scene scene;
 
 		public bool IsOpen() => !Glfw.WindowShouldClose(window);
+
+		public void Load(Scene scene) {
+			this.scene = scene;
+		}
 		
 		public Window() {
 			// initialize and configure
@@ -29,12 +34,10 @@ namespace SharpEngine {
 			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
-		public void BeginRender() {
+		public void Render() {
 			Glfw.PollEvents(); // react to window changes (position etc.)
 			ClearScreen();
-		}
-
-		public void EndRender() {
+			this.scene?.Render();
 			Glfw.SwapBuffers(window);
 		}
 	}

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 namespace SharpEngine
 {
     class Program {
-        static List<Triangle> triangles = new List<Triangle>();
-
         static float Lerp(float from, float to, float t) {
             return from + (to - from) * t;
         }
@@ -14,7 +12,7 @@ namespace SharpEngine
             return Lerp(min, max, (float)random.Next() / int.MaxValue);
         }
         
-        static void CreateTriangles() {
+        static void FillSceneWithTriangles(Scene scene) {
             var random = new Random();
             for (var i = 0; i < 10; i++) {
                 var triangle = new Triangle(new Vertex[] {
@@ -24,7 +22,7 @@ namespace SharpEngine
                 });
                 triangle.Rotate(GetRandomFloat(random));
                 triangle.Move(new Vector(GetRandomFloat(random, -1, 1), GetRandomFloat(random, -1, 1)));
-                triangles.Add(triangle);
+                scene.Add(triangle);
             }
         }
         
@@ -33,19 +31,20 @@ namespace SharpEngine
             var window = new Window();
             var material = new Material("shaders/position-color.vert", "shaders/vertex-color.frag");
             material.Use();
+            var scene = new Scene();
+            window.Load(scene);
 
-            CreateTriangles();
+            FillSceneWithTriangles(scene);
             
             // engine rendering loop
             var direction = new Vector(0.0003f, 0.0003f);
             var multiplier = 0.999f;
             var rotation = 0.0005f;
             while (window.IsOpen()) {
-                window.BeginRender();
 
                 // Update Triangles
-                for (var i = 0; i < triangles.Count; i++) {
-                    var triangle = triangles[i];
+                for (var i = 0; i < scene.triangles.Count; i++) {
+                    var triangle = scene.triangles[i];
                     triangle.Scale(multiplier);
                     triangle.Rotate(rotation);
                 
@@ -70,17 +69,8 @@ namespace SharpEngine
                         direction.y *= -1;
                     }
                 }
-
-                RenderTriangles();
                 
-                window.EndRender();
-            }
-        }
-
-        static void RenderTriangles() {
-            for (var i = 0; i < triangles.Count; i++) {
-                var triangle = triangles[i];
-                triangle.Render();
+                window.Render();
             }
         }
     }
