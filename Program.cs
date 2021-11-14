@@ -12,14 +12,14 @@ namespace SharpEngine
             return Lerp(min, max, (float)random.Next() / int.MaxValue);
         }
         
-        static void FillSceneWithTriangles(Scene scene) {
+        static void FillSceneWithTriangles(Scene scene, Material material) {
             var random = new Random();
             for (var i = 0; i < 10; i++) {
                 var triangle = new Triangle(new Vertex[] {
                     new Vertex(new Vector(-.1f, 0f), Color.Red),
                     new Vertex(new Vector(.1f, 0f), Color.Green),
                     new Vertex(new Vector(0f, .133f), Color.Blue)
-                });
+                }, material);
                 triangle.Rotate(GetRandomFloat(random));
                 triangle.Move(new Vector(GetRandomFloat(random, -1, 1), GetRandomFloat(random, -1, 1)));
                 scene.Add(triangle);
@@ -30,11 +30,10 @@ namespace SharpEngine
             
             var window = new Window();
             var material = new Material("shaders/position-color.vert", "shaders/vertex-color.frag");
-            material.Use();
             var scene = new Scene();
             window.Load(scene);
 
-            FillSceneWithTriangles(scene);
+            FillSceneWithTriangles(scene, material);
             
             // engine rendering loop
             var direction = new Vector(0.0003f, 0.0003f);

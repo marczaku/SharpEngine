@@ -11,9 +11,12 @@ namespace SharpEngine {
 		uint vertexBuffer;
 
 		public float CurrentScale { get; private set; }
+
+		public Material material;
             
-		public Triangle(Vertex[] vertices) {
+		public Triangle(Vertex[] vertices, Material material) {
 			this.vertices = vertices;
+			this.material = material;
 			LoadTriangleIntoBuffer();
 			this.CurrentScale = 1f;
 		}
@@ -72,6 +75,7 @@ namespace SharpEngine {
 		}
 
 		public unsafe void Render() {
+			this.material.Use();
 			glBindVertexArray(vertexArray);
 			glBindBuffer(GL_ARRAY_BUFFER, this.vertexBuffer);
 			fixed (Vertex* vertex = &this.vertices[0]) {
