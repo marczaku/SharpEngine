@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using static OpenGL.Gl;
@@ -34,7 +35,6 @@ namespace SharpEngine {
 			for (var i = 1; i < this.vertices.Length; i++) {
 				min = Vector.Min(min, this.vertices[i].position);
 			}
-
 			return min;
 		}
             
@@ -79,6 +79,19 @@ namespace SharpEngine {
 			}
 			glDrawArrays(GL_TRIANGLES, 0, this.vertices.Length);
 			glBindVertexArray(0);
+		}
+
+		public void Rotate(float rotation) {
+			var center = GetCenter();
+			Move(center * -1);
+			for (int i = 0; i < this.vertices.Length; i++) {
+				var currentRotation = Vector.Angle(this.vertices[i].position);
+				var distance = vertices[i].position.GetMagnitude();
+				var newX = MathF.Cos(currentRotation + rotation);
+				var newY = MathF.Sin(currentRotation + rotation);
+				vertices[i].position = new Vector(newX, newY) * distance;
+			}
+			Move(center);
 		}
 	}
 }
