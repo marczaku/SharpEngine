@@ -1,23 +1,32 @@
-﻿namespace SharpEngine
+﻿using System;
+using System.Collections.Generic;
+
+namespace SharpEngine
 {
-    class Program
-    {
-        static Triangle[] triangles = new Triangle[] {
-            new Triangle (
-                new Vertex[] {
-                    new Vertex(new Vector(0f, 0f), Color.Red),
-                    new Vertex(new Vector(0.2f, 0f), Color.Green),
-                    new Vertex(new Vector(0f, 0.2f), Color.Blue)
-                }
-            ),
-            new Triangle (
-                new Vertex[] {
-                    new Vertex(new Vector(-0.4f, 0f), Color.Red),
-                    new Vertex(new Vector(-0.2f, 0f), Color.Green),
-                    new Vertex(new Vector(-0.3f, 0.133f), Color.Blue)
-                }
-            )
-        };
+    class Program {
+        static List<Triangle> triangles = new List<Triangle>();
+
+        static float Lerp(float from, float to, float t) {
+            return from + (to - from) * t;
+        }
+
+        static float GetRandomFloat(Random random, float min = 0, float max = 1) {
+            return Lerp(min, max, (float)random.Next() / int.MaxValue);
+        }
+        
+        static void CreateTriangles() {
+            var random = new Random();
+            for (var i = 0; i < 10; i++) {
+                var triangle = new Triangle(new Vertex[] {
+                    new Vertex(new Vector(-.1f, 0f), Color.Red),
+                    new Vertex(new Vector(.1f, 0f), Color.Green),
+                    new Vertex(new Vector(0f, .133f), Color.Blue)
+                });
+                triangle.Rotate(GetRandomFloat(random));
+                triangle.Move(new Vector(GetRandomFloat(random, -1, 1), GetRandomFloat(random, -1, 1)));
+                triangles.Add(triangle);
+            }
+        }
         
         static void Main(string[] args) {
             
@@ -25,16 +34,20 @@
             var material = new Material("shaders/position-color.vert", "shaders/vertex-color.frag");
             material.Use();
 
+            CreateTriangles();
+            
             // engine rendering loop
             var direction = new Vector(0.0003f, 0.0003f);
             var multiplier = 0.999f;
+            var rotation = 0.0005f;
             while (window.IsOpen()) {
                 window.BeginRender();
 
                 // Update Triangles
-                for (var i = 0; i < triangles.Length; i++) {
+                for (var i = 0; i < triangles.Count; i++) {
                     var triangle = triangles[i];
                     triangle.Scale(multiplier);
+                    triangle.Rotate(rotation);
                 
                     // 2. Keep track of the Scale, so we can reverse it
                     if (triangle.CurrentScale <= 0.5f) {
@@ -65,7 +78,7 @@
         }
 
         static void RenderTriangles() {
-            for (var i = 0; i < triangles.Length; i++) {
+            for (var i = 0; i < triangles.Count; i++) {
                 var triangle = triangles[i];
                 triangle.Render();
             }
