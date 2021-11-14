@@ -56,7 +56,7 @@ namespace SharpEngine {
 			// the triangle moving around while scaling.
 			// Then, we move it back again.
 			var center = GetCenter();
-			Move(center*-1);
+			Move(-center);
 			for (var i = 0; i < this.vertices.Length; i++) {
 				this.vertices[i].position *= multiplier;
 			}
@@ -83,7 +83,7 @@ namespace SharpEngine {
 
 		public void Rotate(float rotation) {
 			var center = GetCenter();
-			Move(center * -1);
+			Move(-center);
 			for (int i = 0; i < this.vertices.Length; i++) {
 				var currentRotation = Vector.Angle(this.vertices[i].position);
 				var distance = vertices[i].position.GetMagnitude();
