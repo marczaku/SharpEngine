@@ -29,11 +29,17 @@ namespace SharpEngine
         static void Main(string[] args) {
             
             var window = new Window();
-            var material = new Material("shaders/position-color.vert", "shaders/vertex-color.frag");
+            var material = new Material("shaders/world-position-color.vert", "shaders/vertex-color.frag");
             var scene = new Scene();
             window.Load(scene);
 
-            FillSceneWithTriangles(scene, material);
+            //FillSceneWithTriangles(scene, material);
+            var newTriangle = new Triangle(new Vertex[] {
+                new Vertex(new Vector(-.1f, 0f), Color.Red),
+                new Vertex(new Vector(.1f, 0f), Color.Green),
+                new Vertex(new Vector(0f, .133f), Color.Blue)
+            }, material);
+            scene.Add(newTriangle);
             
             // engine rendering loop
             var direction = new Vector(0.0003f, 0.0003f);
