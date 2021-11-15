@@ -44,8 +44,6 @@ namespace SharpEngine
                 // Update Triangles
                 for (var i = 0; i < scene.triangles.Count; i++) {
                     var triangle = scene.triangles[i];
-                    triangle.Scale(multiplier);
-                    triangle.Rotate(rotation);
                 
                     // 2. Keep track of the Scale, so we can reverse it
                     if (triangle.CurrentScale <= 0.5f) {
@@ -54,9 +52,9 @@ namespace SharpEngine
                     if (triangle.CurrentScale >= 1f) {
                         multiplier = 0.999f;
                     }
-
-                    // 3. Move the Triangle by its Direction
-                    triangle.Move(direction);
+                    
+                    triangle.Scale(multiplier);
+                    triangle.Rotate(rotation);
                 
                     // 4. Check the X-Bounds of the Screen
                     if (triangle.GetMaxBounds().x >= 1 && direction.x > 0 || triangle.GetMinBounds().x <= -1 && direction.x < 0) {
@@ -67,6 +65,9 @@ namespace SharpEngine
                     if (triangle.GetMaxBounds().y >= 1 && direction.y > 0 || triangle.GetMinBounds().y <= -1 && direction.y < 0) {
                         direction.y *= -1;
                     }
+                    
+                    
+                    triangle.Move(direction);
                 }
                 
                 window.Render();
