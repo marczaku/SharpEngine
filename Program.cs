@@ -31,8 +31,8 @@ namespace SharpEngine
             const double fixedStepDuration = 1.0 / fixedStepNumberPerSecond;
             double previousFixedStep = 0.0;
             while (window.IsOpen()) {
-                if (Glfw.Time > previousFixedStep + fixedStepDuration) {
-                    previousFixedStep = Glfw.Time;
+                while (Glfw.Time > previousFixedStep + fixedStepDuration) {
+                    previousFixedStep += fixedStepDuration;
                     // Fixed Update:
                     for (var i = 0; i < scene.triangles.Count; i++) {
                         var triangle = scene.triangles[i];
