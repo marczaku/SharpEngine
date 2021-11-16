@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using GLFW;
 
 namespace SharpEngine
@@ -13,20 +12,6 @@ namespace SharpEngine
             return Lerp(min, max, (float)random.Next() / int.MaxValue);
         }
         
-        static void FillSceneWithTriangles(Scene scene, Material material) {
-            var random = new Random();
-            for (var i = 0; i < 10; i++) {
-                var triangle = new Triangle(new Vertex[] {
-                    new Vertex(new Vector(-.1f, 0f), Color.Red),
-                    new Vertex(new Vector(.1f, 0f), Color.Green),
-                    new Vertex(new Vector(0f, .133f), Color.Blue)
-                }, material);
-                triangle.Transform.Rotate(GetRandomFloat(random));
-                triangle.Transform.Move(new Vector(GetRandomFloat(random, -1, 1), GetRandomFloat(random, -1, 1)));
-                scene.Add(triangle);
-            }
-        }
-        
         static void Main(string[] args) {
             
             var window = new Window();
@@ -35,12 +20,8 @@ namespace SharpEngine
             window.Load(scene);
 
             //FillSceneWithTriangles(scene, material);
-            var newTriangle = new Triangle(new Vertex[] {
-                new Vertex(new Vector(-.1f, 0f), Color.Red),
-                new Vertex(new Vector(.1f, 0f), Color.Green),
-                new Vertex(new Vector(0f, .133f), Color.Blue)
-            }, material);
-            scene.Add(newTriangle);
+            var shape = new Triangle(material);
+            scene.Add(shape);
             
             // engine rendering loop
             var direction = new Vector(0.01f, 0.01f);
