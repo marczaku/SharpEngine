@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GLFW;
 
 namespace SharpEngine
 {
@@ -42,40 +43,44 @@ namespace SharpEngine
             scene.Add(newTriangle);
             
             // engine rendering loop
-            var direction = new Vector(0.0003f, 0.0003f);
-            var multiplier = 0.999f;
-            var rotation = 0.0005f;
+            var direction = new Vector(0.01f, 0.01f);
+            var multiplier = 0.95f;
+            var rotation = 0.05f;
+            const int fixedStepNumberPerSecond = 30;
+            const double fixedStepDuration = 1.0 / fixedStepNumberPerSecond;
+            double previousFixedStep = 0.0;
             while (window.IsOpen()) {
-
-                // Update Triangles
-                for (var i = 0; i < scene.triangles.Count; i++) {
-                    var triangle = scene.triangles[i];
+                if (Glfw.Time > previousFixedStep + fixedStepDuration) {
+                    previousFixedStep = Glfw.Time;
+                    // Fixed Update:
+                    for (var i = 0; i < scene.triangles.Count; i++) {
+                        var triangle = scene.triangles[i];
                 
-                    // 2. Keep track of the Scale, so we can reverse it
-                    if (triangle.Transform.CurrentScale.GetMagnitude() <= 0.5f) {
-                        multiplier = 1.001f;
-                    }
-                    if (triangle.Transform.CurrentScale.GetMagnitude() >= 2f) {
-                        multiplier = 0.999f;
-                    }
+                        // 2. Keep track of the Scale, so we can reverse it
+                        if (triangle.Transform.CurrentScale.GetMagnitude() <= 0.5f) {
+                            multiplier = 1.05f;
+                        }
+                        if (triangle.Transform.CurrentScale.GetMagnitude() >= 2f) {
+                            multiplier = 0.95f;
+                        }
                     
-                    triangle.Transform.Scale(multiplier);
-                    triangle.Transform.Rotate(rotation);
+                        triangle.Transform.Scale(multiplier);
+                        triangle.Transform.Rotate(rotation);
                 
-                    // 4. Check the X-Bounds of the Screen
-                    if (triangle.GetMaxBounds().x >= 1 && direction.x > 0 || triangle.GetMinBounds().x <= -1 && direction.x < 0) {
-                        direction.x *= -1;
-                    }
+                        // 4. Check the X-Bounds of the Screen
+                        if (triangle.GetMaxBounds().x >= 1 && direction.x > 0 || triangle.GetMinBounds().x <= -1 && direction.x < 0) {
+                            direction.x *= -1;
+                        }
                 
-                    // 5. Check the Y-Bounds of the Screen
-                    if (triangle.GetMaxBounds().y >= 1 && direction.y > 0 || triangle.GetMinBounds().y <= -1 && direction.y < 0) {
-                        direction.y *= -1;
+                        // 5. Check the Y-Bounds of the Screen
+                        if (triangle.GetMaxBounds().y >= 1 && direction.y > 0 || triangle.GetMinBounds().y <= -1 && direction.y < 0) {
+                            direction.y *= -1;
+                        }
+                    
+                    
+                        triangle.Transform.Move(direction);
                     }
-                    
-                    
-                    triangle.Transform.Move(direction);
                 }
-                
                 window.Render();
             }
         }
