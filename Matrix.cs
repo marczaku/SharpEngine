@@ -1,3 +1,5 @@
+using System;
+
 namespace SharpEngine {
 	public struct Matrix {
 		// i wrote this line here manually:
@@ -22,8 +24,8 @@ namespace SharpEngine {
 
 		public static Vector operator *(Matrix m, Vector v) {
 			return new Vector(m.m11 * v.x + m.m12 * v.y + m.m13 * v.z + m.m14 * 1,
-				m.m21 * v.x + m.m22 * v.y + m.m23 * v.z + m.m24 * 1,
-				m.m31 * v.x + m.m32 * v.y + m.m33 * v.z + m.m34 * 1);
+							  m.m21 * v.x + m.m22 * v.y + m.m23 * v.z + m.m24 * 1,
+							  m.m31 * v.x + m.m32 * v.y + m.m33 * v.z + m.m34 * 1);
 		}
 		
 		public static Matrix operator *(Matrix a, Matrix b) {
@@ -62,6 +64,37 @@ namespace SharpEngine {
 			result.m22 = scale.y;
 			result.m33 = scale.z;
 			return result;
+		}
+
+		static Matrix RotationX(float x) {
+			var result = Identity;
+			result.m22 = MathF.Cos(x);
+			result.m23 = -MathF.Sin(x);
+			result.m32 = MathF.Sin(x);
+			result.m33 = MathF.Cos(x);
+			return result;
+		}
+
+		static Matrix RotationY(float y) {
+			var result = Identity;
+			result.m11 = MathF.Cos(y);
+			result.m31 = -MathF.Sin(y);
+			result.m13 = MathF.Sin(y);
+			result.m33 = MathF.Cos(y);
+			return result;
+		}
+
+		static Matrix RotationZ(float z) {
+			var result = Identity;
+			result.m11 = MathF.Cos(z);
+			result.m12 = -MathF.Sin(z);
+			result.m21 = MathF.Sin(z);
+			result.m22 = MathF.Cos(z);
+			return result;
+		}
+
+		public static Matrix Rotation(Vector rotation) {
+			return RotationZ(rotation.z) * RotationY(rotation.y) * RotationX(rotation.x);
 		}
 	}
 }
