@@ -6,6 +6,8 @@ namespace SharpEngine {
 		public Vector Rotation { get; set; }
 		public Matrix Matrix => Matrix.Translation(Position) * Matrix.Rotation(Rotation) * Matrix.Scale(CurrentScale);
 
+		public Vector Forward => Matrix.Transform(Matrix, Vector.Forward, 0);
+
 		public Transform() {
 			this.CurrentScale = new Vector(1, 1, 1);
 		}
