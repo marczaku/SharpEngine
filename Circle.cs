@@ -7,7 +7,7 @@ namespace SharpEngine {
 		}
 		
 		static Vertex[] CreateCircle() {
-			const int numberOfSegments = 8;
+			const int numberOfSegments = 32;
 			const int verticesPerSegment = 3;
 			const float scale = .1f;
 			Vertex[] result = new Vertex[numberOfSegments*verticesPerSegment];

@@ -23,7 +23,7 @@ namespace SharpEngine
             scene.Add(shape);
 
             var ground = new Rectangle(material);
-            ground.Transform.CurrentScale = new Vector(20f, 1f, 1f);
+            ground.Transform.CurrentScale = new Vector(10f, 1f, 1f);
             ground.Transform.Position = new Vector(0f, -1f);
             scene.Add(ground);
 
