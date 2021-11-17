@@ -2,13 +2,13 @@ using System;
 
 namespace SharpEngine {
 	public class Circle : Shape {
-		public float Radius => .1f;
+		public float Radius => .1f * Transform.CurrentScale.x;
 
 		public Circle(Material material) : base(CreateCircle(), material) {
 		}
 		
 		static Vertex[] CreateCircle() {
-			const int numberOfSegments = 32;
+			const int numberOfSegments = 8;
 			const int verticesPerSegment = 3;
 			const float scale = .1f;
 			Vertex[] result = new Vertex[numberOfSegments*verticesPerSegment];

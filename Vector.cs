@@ -64,13 +64,21 @@ namespace SharpEngine {
 		}
 
 		public float GetMagnitude() {
-			return MathF.Sqrt(x * x + y * y + z * z);
+			return MathF.Sqrt(GetSquareMagnitude());
+		}
+
+		public float GetSquareMagnitude() {
+			return x * x + y * y + z * z;
 		}
 
 		public Vector Normalize() {
 			var magnitude = GetMagnitude();
 			// DO NOT DIVIDE BY ZERO!
 			return magnitude > 0 ? this / GetMagnitude() : this;
+		}
+
+		public override string ToString() {
+			return $"Vector(X:{this.x}, Y:{this.y}, Z:{this.z}";
 		}
 	}
 }
