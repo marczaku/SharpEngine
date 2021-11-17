@@ -11,8 +11,8 @@ namespace SharpEngine {
 		public Transform Transform { get; }
 		public Material material;
 
-		float mass;
-		float massInverse;
+		float mass = 1;
+		float massInverse = 1;
 		public float Mass {
 			get => this.mass;
 			set {
