@@ -32,7 +32,7 @@ namespace SharpEngine
                 scene.Add(circle);
             }
 
-            const int fixedStepNumberPerSecond = 30;
+            const int fixedStepNumberPerSecond = 60;
             const float fixedDeltaTime = 1.0f / fixedStepNumberPerSecond;
             const int maxStepsPerFrame = 5;
             var previousFixedStep = 0.0;
