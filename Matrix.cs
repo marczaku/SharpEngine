@@ -27,15 +27,16 @@ namespace SharpEngine {
 							  m.m21 * v.x + m.m22 * v.y + m.m23 * v.z + m.m24 * 1,
 							  m.m31 * v.x + m.m32 * v.y + m.m33 * v.z + m.m34 * 1);
 		}
-		
+
 		public static Vector Transform(Matrix m, Vector v, float w = 1f) {
 			return new Vector(m.m11 * v.x + m.m12 * v.y + m.m13 * v.z + m.m14 * w,
-				m.m21 * v.x + m.m22 * v.y + m.m23 * v.z + m.m24 * w,
-				m.m31 * v.x + m.m32 * v.y + m.m33 * v.z + m.m34 * w);
+							  m.m21 * v.x + m.m22 * v.y + m.m23 * v.z + m.m24 * w,
+							  m.m31 * v.x + m.m32 * v.y + m.m33 * v.z + m.m34 * w);
 		}
 		
 		public static Matrix operator *(Matrix a, Matrix b) {
-			return new Matrix(	b.m11*a.m11+b.m21*a.m12+b.m31*a.m13+b.m41*a.m14,
+			return new Matrix(	
+				b.m11*a.m11+b.m21*a.m12+b.m31*a.m13+b.m41*a.m14,
 				b.m12*a.m11+b.m22*a.m12+b.m32*a.m13+b.m42*a.m14,
 				b.m13*a.m11+b.m23*a.m12+b.m33*a.m13+b.m43*a.m14,
 				b.m14*a.m11+b.m24*a.m12+b.m34*a.m13+b.m44*a.m14,
@@ -101,6 +102,18 @@ namespace SharpEngine {
 
 		public static Matrix Rotation(Vector rotation) {
 			return RotationZ(rotation.z) * RotationY(rotation.y) * RotationX(rotation.x);
+		}
+		
+		public static Matrix Perspective(float fov, float aspectRatio, float nearPlane, float farPlane)
+		{
+			float yScale = 1.0f / MathF.Tan(fov * 0.5f);
+			float xScale = yScale / aspectRatio;
+			float Q = farPlane / (farPlane - nearPlane);
+
+			return new Matrix(xScale, 0.0f, 0.0f, 0.0f,
+					0.0f, yScale, 0.0f, 0.0f,
+					0.0f, 0.0f, Q, Q * nearPlane,
+					0.0f, 0f, -1f, 0.0f);
 		}
 	}
 }

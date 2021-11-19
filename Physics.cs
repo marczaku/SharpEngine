@@ -10,7 +10,7 @@ namespace SharpEngine {
 		}
 
 		public void Update(float deltaTime) {
-			var gravitationalAcceleration = Vector.Down * 9.819649f * 0;
+			var gravitationalAcceleration = Vector.Down * 9.819649f * 0f;
 			for (int i = 0; i < this.scene.shapes.Count; i++) {
 				Circle shape = this.scene.shapes[i] as Circle;
 				
@@ -30,20 +30,31 @@ namespace SharpEngine {
 				// collision detection:
 				for (int j = i+1; j < this.scene.shapes.Count; j++) {
 					Circle other = this.scene.shapes[j] as Circle;
-					// check for collision
-					Vector deltaPosition = other.GetCenter() - shape.GetCenter();
-					bool collision = deltaPosition.GetSquareMagnitude() <= (shape.Radius + other.Radius) * (shape.Radius + other.Radius);
-
-					if (collision) {
+					
+					// Collision Detection
+					Vector deltaPosition = other.Transform.Position - shape.Transform.Position;
+					float squareOverlap = (shape.Radius + other.Radius) * (shape.Radius + other.Radius) - deltaPosition.GetSquareMagnitude();
+					if (squareOverlap > 0) {
+						// Collision Resolution
+						
+						float overlap = MathF.Sqrt(squareOverlap);
 						Vector collisionNormal = deltaPosition.Normalize();
+						float totalMass = other.Mass + shape.Mass;
+						
+						// Interprenetation Resolvement
+						other.Transform.Position +=  overlap * shape.Mass / totalMass * collisionNormal;
+						shape.Transform.Position -= overlap * other.Mass / totalMass * collisionNormal;
+						
+						// Collision Impulses
+						// calculate the part of the shape's velocity that is parallel to the collision normal
 						Vector shapeVelocity = Vector.Dot(shape.velocity, collisionNormal) * collisionNormal;
+						// calculate the part of the other shape's velocity that is parallel to the collision normal
 						Vector otherVelocity = Vector.Dot(other.velocity, collisionNormal) * collisionNormal;
 						
-						float totalMass = other.Mass + shape.Mass;
 
-						Vector velocityChange = 2*other.Mass/totalMass * (otherVelocity - shapeVelocity);
+						Vector velocityChange = 2 * other.Mass / totalMass * (otherVelocity - shapeVelocity);
 						Vector otherVelocityChange = 2 * shape.Mass / totalMass * (shapeVelocity - otherVelocity); //-shape.Mass / other.Mass * velocityChange;
-
+						
 						AssertPhysicalCorrectness(shape.Mass, shape.velocity, other.Mass, other.velocity, shape.Mass, shape.velocity + velocityChange, other.Mass, other.velocity + otherVelocityChange);
 
 						shape.velocity += velocityChange;
@@ -74,7 +85,7 @@ namespace SharpEngine {
 			AssertPreservationOfKineticEnergy(m1, v1, m2, v2, m1_, v1_, m2_, v2_);
 		}
 
-		static void AssertPreservationOfKineticEnergy(float m1, Vector v1, float m2, Vector v2, float m1_, Vector v1_, float m2_, Vector v2_, float tolerance = 0.00001f) {
+		static void AssertPreservationOfKineticEnergy(float m1, Vector v1, float m2, Vector v2, float m1_, Vector v1_, float m2_, Vector v2_, float tolerance = 0.0005f) {
 			float oldTotalKineticEnergy = CalculateTotalKineticEnergy(m1, v1, m2, v2);
 			float newTotalKineticEnergy = CalculateTotalKineticEnergy(m1_, v1_, m2_, v2_);
 			Debug.Assert(MathF.Abs(oldTotalKineticEnergy - newTotalKineticEnergy) < tolerance, $"Kinetic energy was not preserved. Old: {oldTotalKineticEnergy} New: {newTotalKineticEnergy}");

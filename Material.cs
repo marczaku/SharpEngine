@@ -29,6 +29,16 @@ namespace SharpEngine {
 			int transformLocation = glGetUniformLocation(this.program, "transform");
 			glUniformMatrix4fv(transformLocation, 1, true, &matrix.m11);
 		}
+		
+		public unsafe void SetView(Matrix matrix) {
+			int viewLocation = glGetUniformLocation(this.program, "view");
+			glUniformMatrix4fv(viewLocation, 1, true, &matrix.m11);
+		}
+		
+		public unsafe void SetProjection(Matrix matrix) {
+			int projectionLocation = glGetUniformLocation(this.program, "projection");
+			glUniformMatrix4fv(projectionLocation, 1, true, &matrix.m11);
+		}
 
 		public void Use() {
 			glUseProgram(program);
